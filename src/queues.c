@@ -301,6 +301,7 @@ bool queues_notification_replace_id(struct notification *new)
                         if (old->id == new->id) {
                                 iter->data = new;
                                 new->dup_count = old->dup_count;
+                                new->timestamp = old->timestamp;
 
                                 if (allqueues[i] == displayed) {
                                         new->start = time_monotonic_now();
