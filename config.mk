@@ -84,7 +84,6 @@ endif
 
 ifneq (0,${X11})
 pkg_config_packs += x11
-pkg_config_packs += xinerama
 pkg_config_packs += xext
 pkg_config_packs += "xrandr >= 1.5"
 pkg_config_packs += xscrnsaver

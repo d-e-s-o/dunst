@@ -14,7 +14,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <X11/extensions/randr.h>
-#include <X11/extensions/Xinerama.h>
 #include <X11/extensions/Xrandr.h>
 #include <X11/Xatom.h>
 #include <X11/X.h>
@@ -37,7 +36,6 @@ static int randr_minor_version = 0;
 
 void randr_init(void);
 void randr_update(void);
-void xinerama_update(void);
 void screen_update_fallback(void);
 static void x_follow_setup_error_handler(void);
 static int x_follow_tear_down_error_handler(void);
@@ -102,12 +100,8 @@ double screen_dpi_get(const struct screen_info *scr)
 
 void init_screens(void)
 {
-        if (settings.force_xinerama) {
-                xinerama_update();
-        } else {
-                randr_init();
-                randr_update();
-        }
+        randr_init();
+        randr_update();
 }
 
 void free_screen_ar(struct screen_info *scr, int len)
@@ -191,31 +185,6 @@ bool screen_check_event(XEvent *ev)
                 return true;
         }
         return false;
-}
-
-void xinerama_update(void)
-{
-        int n;
-        XineramaScreenInfo *info = XineramaQueryScreens(xctx.dpy, &n);
-
-        if (!info) {
-                LOG_W("Could not get xinerama screen info. "
-                      "Falling back to single monitor mode.");
-                screen_update_fallback();
-                return;
-        }
-
-        alloc_screen_ar(n);
-
-        for (int i = 0; i < n; i++) {
-                screens[i].id = i;
-                screens[i].x = info[i].x_org;
-                screens[i].y = info[i].y_org;
-                screens[i].h = info[i].height;
-                screens[i].w = info[i].width;
-                LOG_I("Detected screen %d", screens[i].id);
-        }
-        XFree(info);
 }
 
 void screen_update_fallback(void)

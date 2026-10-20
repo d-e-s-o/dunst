@@ -24,12 +24,11 @@ math = cc.find_library('m')
 
 # Optional dependencies (X11)
 x11 = dependency('x11', required: get_option('x11'))
-xinerama = dependency('xinerama', required: get_option('x11'))
 xext = dependency('xext', required: get_option('x11'))
 xrandr = dependency('xrandr', required: get_option('x11'), version: '>=1.5')
 xscrnsaver = dependency('xscrnsaver', required: get_option('x11'))
 
-x11_support = x11.found() and xinerama.found() and xext.found() and xrandr.found() and xscrnsaver.found()
+x11_support = x11.found() and xext.found() and xrandr.found() and xscrnsaver.found()
 
 # Optional dependencies (Wayland)
 wayland_client = dependency('wayland-client', required: get_option('wayland'))
@@ -61,7 +60,7 @@ if not x11_support and not wayland_support
 endif
 
 if x11_support
-    dunst_depends += [x11, xinerama, xext, xrandr, xscrnsaver]
+    dunst_depends += [x11, xext, xrandr, xscrnsaver]
     add_project_arguments('-DENABLE_X11', language: 'c')
 endif
 
